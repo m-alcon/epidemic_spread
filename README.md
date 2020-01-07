@@ -1,1 +1,1 @@
-# epidemic_spread
+# Epidemic Spread

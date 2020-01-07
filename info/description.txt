@@ -1,0 +1,7 @@
+PROJECT 6 (Argimiro) Epidemic Spread on Weighted Networks
+To add a further layer of realism to the Models of Epidemic spreads seen in class, this project proposes to work a model based on (edge) weighted networks. Here the weights can represent the heterogeneous contacts among individuals. For sex transmitted diseases this accounts for the number of sex acts among individuals which certainly has an impact on the likelihood of being infected. Thus, work out the dynamics of  SIS and SIR models  on weighted networks and estimate key epidemiological variables such as the basic reproductive ratio R. A place to start on this research is the paper  
+Epidemic Spread on Weighted Networks, by Christel Kamp,  Mathieu Moslonka-Lefebvre, Samuel Alizon
+Here: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003352
+There are other works on this subject (Google it!)
+
+You should read and work out details, and implement the model. There the authors treat SIR model, and you can extend this to SIS model.
