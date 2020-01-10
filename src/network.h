@@ -28,16 +28,15 @@ typedef vector<CVector> CMatrix;
 class Network {    
     private:
         int n, k, l;
-        float delta, gamma;
         random_device device;
         mt19937 generator;
         NVector nodes;
         CMatrix adjacency;
     public:
-        Network (const int &n_, const int &k_, const int &l_, const float &delta_, const float &gamma_);
+        Network (const int &n_, const int &k_, const int &l_);
         void write (ostream &out) const;
-        size_t size ();
-        Node* get_node (const int &id) const;
-        CVector* get_neighbors (const int &id) const;
+        size_t size () const;
+        Node* get_node (const int &id);
+        CVector* get_neighbors (const int &id);
         void update_infecteds ();
 };

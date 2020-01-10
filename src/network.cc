@@ -2,6 +2,7 @@
 
 void Node::infect() {
     new_infected = true;
+    recovered = false;
 }
 
 void Node::recover() {
@@ -15,12 +16,12 @@ Connection create_connection(Node* node, const int &weight) {
     return c;
 }
 
-size_t Network::size() {
+size_t Network::size() const {
     return static_cast<size_t> (n);
 }
 
-Network::Network(const int &n_, const int &k_, const int &l_, const float &delta_, const float &gamma_) :
-    n(n_), k(k_), l(l_), delta(delta_), gamma(gamma_), generator(device()) {        
+Network::Network(const int &n_, const int &k_, const int &l_) :
+    n(n_), k(k_), l(l_), generator(device()) {        
         Matrix stubs(n, Vector (k, 1));
         cerr << "generate stubs" << endl;
         // Generate k stubs for each node and distribute weights
@@ -125,5 +126,21 @@ void Network::write(ostream &out) const {
     }
 }
 
+Node* Network::get_node (const int &id) {
+    return &nodes[id];
+}
+
+CVector* Network::get_neighbors (const int &id) {
+    return &adjacency[id];
+}
+
 void Network::update_infecteds() {
+    for (size_t i = 0; i < n; ++i) {
+        if (nodes[i].new_infected) {
+            nodes[i].new_infected = false;
+            nodes[i].infected = true;
+        } else if (nodes[i].recover) {
+            nodes[i].infected = false;
+        }
+    }
 }
