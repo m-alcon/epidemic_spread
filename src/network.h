@@ -28,13 +28,13 @@ typedef vector<CVector> CMatrix;
 
 class Network {    
     private:
-        int n, k, l;
+        int n;
         random_device device;
         mt19937 generator;
         NVector nodes;
         CMatrix adjacency;
     public:
-        Network (const int &n_, const int &k_, const int &l_);
+        Network (const int &n_, const int &k, const int &l);
         void write (ostream &out) const;
         size_t size () const;
         Node* get_node (const int &id);
