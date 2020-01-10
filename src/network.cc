@@ -1,9 +1,15 @@
 #include "network.h"
 
+void Node::infect() {
+    new_infected = true;
+}
+
+void Node::recover() {
+    recovered = true;
+}
+
 Network::Network(const int &n_, const int &k_, const int &l_, const float &delta_, const float &gamma_) :
-    n(n_), k(k_), l(l_), delta(delta_), gamma(gamma_), generator(device()) {
-        adjacency = NMatrix(n);
-        
+    n(n_), k(k_), l(l_), delta(delta_), gamma(gamma_), generator(device()) {        
         Matrix stubs(n, Vector (k, 1));
         cerr << "generate stubs" << endl;
         // Generate k stubs for each node and distribute weights
@@ -87,6 +93,8 @@ Network::Network(const int &n_, const int &k_, const int &l_, const float &delta
             }
         }
 
+        adjacency = Matrix(n);
+
         cerr << "move" << endl;
         // Move adjacency matrix to adjacency list
         for (size_t i = 0; i < n; ++i) {
@@ -94,13 +102,16 @@ Network::Network(const int &n_, const int &k_, const int &l_, const float &delta
                 if (adjacency_matrix[i][j] > 0)
                     adjacency[i].push_back(Node(j, adjacency_matrix[i][j]));
         }
+}
 
-        cerr << "print" << endl;
-        // print
-        for (size_t i = 0; i < n; ++i) {
-            cout << adjacency[i].size();
-            for (size_t j = 0; j < adjacency[i].size(); ++j)
-                cout << " " << adjacency[i][j].id << " " << adjacency[i][j].weight;
-            cout << endl;
-        }
+void Network::write(ostream &out) const {
+    for (size_t i = 0; i < n; ++i) {
+        out << adjacency[i].size();
+        for (size_t j = 0; j < adjacency[i].size(); ++j)
+            out << " " << adjacency[i][j].id << " " << adjacency[i][j].weight;
+        out << endl;
+    }
+}
+
+void Network::update_infecteds() {
 }
