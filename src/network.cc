@@ -1,5 +1,13 @@
 #include "network.h"
 
+Node::Node() {
+    initialize();
+}
+
+void Node::initialize() {
+    infected = new_infected = recovered = false;
+}
+
 void Node::infect() {
     new_infected = true;
     recovered = false;
@@ -133,6 +141,20 @@ Node* Network::get_node (const int &id) {
 CVector* Network::get_neighbors (const int &id) {
     return &adjacency[id];
 }
+
+void Network::initialize(const int &n_infected) {
+    for (size_t i = 0; i < n; ++i) {
+        nodes[i].initialize();
+    }
+    uniform_int_distribution<int> distribution (0, n-1);
+    for (int i = 0; i < n_infected; ++i) {
+        int id = distribution(generator);
+        while (nodes[id].infected)
+            id = distribution(generator);
+        nodes[id].infected = true;
+    }
+}
+
 
 void Network::update_infecteds() {
     for (size_t i = 0; i < n; ++i) {
