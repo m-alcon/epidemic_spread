@@ -11,7 +11,8 @@ class Node {
     public:
         int id; 
         bool infected, new_infected, recovered;
-        Node() : infected(false), new_infected(false), recovered(false) {}
+        Node();
+        void initialize();
         void infect();
         void recover();
 };
@@ -38,5 +39,6 @@ class Network {
         size_t size () const;
         Node* get_node (const int &id);
         CVector* get_neighbors (const int &id);
+        void initialize(const int &n_infected);
         void update_infecteds ();
 };
