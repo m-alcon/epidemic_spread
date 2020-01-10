@@ -8,11 +8,15 @@ void Node::recover() {
     recovered = true;
 }
 
-Connection create_connection(const int &id, const int &weight) {
+Connection create_connection(Node* node, const int &weight) {
     Connection c;
-    c.id = id;
+    c.node = node;
     c.weight = weight;
     return c;
+}
+
+size_t Network::size() {
+    return static_cast<size_t> (n);
 }
 
 Network::Network(const int &n_, const int &k_, const int &l_, const float &delta_, const float &gamma_) :
@@ -82,21 +86,20 @@ Network::Network(const int &n_, const int &k_, const int &l_, const float &delta
 
         // Create adjacency matrix
         for (size_t i = 0; i < n*k; i += 2) {
-            Connection u, v;
-            u.id = all_stubs[i][0];
-            v.id = all_stubs[i+1][0];
-            u.weight = stubs[u.id][all_stubs[i][1]];
-            v.weight = stubs[v.id][all_stubs[i+1][1]];
-            int diff = abs(u.weight - v.weight);
-            if (diff <= 1 and diff <= 0.1*min(u.weight, v.weight)) {
-                if (u.weight != v.weight) {
+            int u_id = all_stubs[i][0];
+            int v_id = all_stubs[i+1][0];
+            int u_weight = stubs[u_id][all_stubs[i][1]];
+            int v_weight = stubs[v_id][all_stubs[i+1][1]];
+            int diff = abs(u_weight - v_weight);
+            if (diff <= 1 and diff <= 0.1*min(u_weight, v_weight)) {
+                if (u_weight != v_weight) {
                     if (bool_distr(generator))
-                        u.weight = v.weight;
+                        u_weight = v_weight;
                     else
-                        v.weight = u.weight;
+                        v_weight = u_weight;
                 }
-                adjacency_matrix[u.id][v.id] += v.weight;
-                adjacency_matrix[v.id][u.id] += u.weight;
+                adjacency_matrix[u_id][v_id] += v_weight;
+                adjacency_matrix[v_id][u_id] += u_weight;
             }
         }
 
@@ -106,9 +109,10 @@ Network::Network(const int &n_, const int &k_, const int &l_, const float &delta
         cerr << "move" << endl;
         // Move adjacency matrix to adjacency list
         for (size_t i = 0; i < n; ++i) {
+            nodes[i].id = i;
             for (size_t j = 0; j < n; ++j)
                 if (adjacency_matrix[i][j] > 0)
-                    adjacency[i].push_back(create_connection(j, adjacency_matrix[i][j]));
+                    adjacency[i].push_back(create_connection(&nodes[i], adjacency_matrix[i][j]));
         }
 }
 
@@ -116,7 +120,7 @@ void Network::write(ostream &out) const {
     for (size_t i = 0; i < n; ++i) {
         out << adjacency[i].size();
         for (size_t j = 0; j < adjacency[i].size(); ++j)
-            out << " " << adjacency[i][j].id << " " << adjacency[i][j].weight;
+            out << " " << adjacency[i][j].node->id << " " << adjacency[i][j].weight;
         out << endl;
     }
 }

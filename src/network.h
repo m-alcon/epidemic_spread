@@ -9,6 +9,7 @@ typedef vector<Vector> Matrix;
 
 class Node {
     public:
+        int id; 
         bool infected, new_infected, recovered;
         Node() : infected(false), new_infected(false), recovered(false) {}
         void infect();
@@ -16,7 +17,8 @@ class Node {
 };
 
 struct Connection {
-    int id, weight;
+    Node* node;
+    int weight;
 };
 
 typedef vector<Node> NVector;
@@ -33,9 +35,9 @@ class Network {
         CMatrix adjacency;
     public:
         Network (const int &n_, const int &k_, const int &l_, const float &delta_, const float &gamma_);
-        void write(ostream &out) const;
-        Node* get_node(const int &id) const;
-        CVector* get_neighbors(const int &id) const;
-
-        void update_infecteds();
+        void write (ostream &out) const;
+        size_t size ();
+        Node* get_node (const int &id) const;
+        CVector* get_neighbors (const int &id) const;
+        void update_infecteds ();
 };
