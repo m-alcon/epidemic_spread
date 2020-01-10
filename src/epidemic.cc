@@ -1,16 +1,9 @@
 #include "network.h"
-
-int main() {
-    Network net (10000, 20, 50);
-    // net.write(cout);
-    simulation_SIS(net, 0.1, 0.06, 20, 1000);
-    simulation_SIR(net, 0.1, 0.06, 20, 1000);
-    return 0;
-}
+#include <fstream>
 
 void simulation_SIS (Network &net, const float &beta, const float &gamma, const int &initials, const int &tmax) {
     random_device device;
-    mt19937 generator(device);
+    mt19937 generator(device());
     uniform_real_distribution<float> distribution (0.0f,1.0f);
     net.initialize(initials);
     int infecteds = initials;
@@ -43,7 +36,7 @@ void simulation_SIS (Network &net, const float &beta, const float &gamma, const 
 
 void simulation_SIR (Network &net, const float &beta, const float &gamma, const int &initials, const int &tmax) {
     random_device device;
-    mt19937 generator(device);
+    mt19937 generator(device());
     uniform_real_distribution<float> distribution (0.0f,1.0f);
     net.initialize(initials);
     int infecteds = initials;
@@ -74,4 +67,16 @@ void simulation_SIR (Network &net, const float &beta, const float &gamma, const 
         cout << t << " " << infecteds << " " << recovereds << endl;
         net.update_infecteds();
     }
+}
+
+int main() {
+    Network net (10000, 4, 8);
+    ofstream sis ("data/net_sis.dat");
+    ofstream sir ("data/net_sir.dat");
+    simulation_SIS(net, 0.01, 0.004, 20, 1000);
+    net.write(sis);
+    simulation_SIR(net, 0.01, 0.004, 20, 1000);
+    net.write(sir);
+
+    return 0;
 }

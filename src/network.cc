@@ -121,7 +121,7 @@ Network::Network(const int &n_, const int &k, const int &l) :
             nodes[i].id = i;
             for (size_t j = 0; j < n; ++j)
                 if (adjacency_matrix[i][j] > 0)
-                    adjacency[i].push_back(create_connection(&nodes[i], adjacency_matrix[i][j]));
+                    adjacency[i].push_back(create_connection(&nodes[j], adjacency_matrix[i][j]));
         }
 }
 
