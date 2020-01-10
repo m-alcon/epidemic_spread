@@ -8,6 +8,13 @@ void Node::recover() {
     recovered = true;
 }
 
+Connection create_connection(const int &id, const int &weight) {
+    Connection c;
+    c.id = id;
+    c.weight = weight;
+    return c;
+}
+
 Network::Network(const int &n_, const int &k_, const int &l_, const float &delta_, const float &gamma_) :
     n(n_), k(k_), l(l_), delta(delta_), gamma(gamma_), generator(device()) {        
         Matrix stubs(n, Vector (k, 1));
@@ -75,7 +82,7 @@ Network::Network(const int &n_, const int &k_, const int &l_, const float &delta
 
         // Create adjacency matrix
         for (size_t i = 0; i < n*k; i += 2) {
-            Node u, v;
+            Connection u, v;
             u.id = all_stubs[i][0];
             v.id = all_stubs[i+1][0];
             u.weight = stubs[u.id][all_stubs[i][1]];
@@ -93,14 +100,15 @@ Network::Network(const int &n_, const int &k_, const int &l_, const float &delta
             }
         }
 
-        adjacency = Matrix(n);
+        adjacency = CMatrix(n);
+        nodes = NVector(n, Node());
 
         cerr << "move" << endl;
         // Move adjacency matrix to adjacency list
         for (size_t i = 0; i < n; ++i) {
             for (size_t j = 0; j < n; ++j)
                 if (adjacency_matrix[i][j] > 0)
-                    adjacency[i].push_back(Node(j, adjacency_matrix[i][j]));
+                    adjacency[i].push_back(create_connection(j, adjacency_matrix[i][j]));
         }
 }
 

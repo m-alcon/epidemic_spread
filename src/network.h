@@ -9,16 +9,19 @@ typedef vector<Vector> Matrix;
 
 class Node {
     public:
-        int weight;
         bool infected, new_infected, recovered;
-        Node() : weight(0) {};
-        Node (const int &weight_) :
-            weight(weight_) {}
+        Node() : infected(false), new_infected(false), recovered(false) {}
         void infect();
         void recover();
 };
 
+struct Connection {
+    int id, weight;
+};
+
 typedef vector<Node> NVector;
+typedef vector<Connection> CVector;
+typedef vector<CVector> CMatrix;
 
 class Network {    
     private:
@@ -26,13 +29,13 @@ class Network {
         float delta, gamma;
         random_device device;
         mt19937 generator;
-        // uniform_real_distribution<float> real_distr(0,1);
-        //uniform_int_distribution<uint> stub_distr(0, n-1);
-        // uniform_int_distribution<uint> nodes_distr(0, c.nodes() - 1);
         NVector nodes;
-        Matrix adjacency;
+        CMatrix adjacency;
     public:
         Network (const int &n_, const int &k_, const int &l_, const float &delta_, const float &gamma_);
         void write(ostream &out) const;
+        Node* get_node(const int &id) const;
+        CVector* get_neighbors(const int &id) const;
+
         void update_infecteds();
 };
