@@ -1,0 +1,54 @@
+\documentclass[sigconf,authorversion]{acmart}
+\usepackage{subcaption}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{bm}
+\usepackage{appendix}
+\usepackage{xcolor}
+\usepackage[skins,listings,breakable]{tcolorbox}
+%\usepackage{cite}
+%\top-mid-bottomrule
+
+% Remove reference format
+\settopmatter{printacmref=false}
+\setcopyright{none}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\pagestyle{plain}
+
+\title{Epidemic Spread on Weighted Networks}
+\author{Miguel Alcón Doganoc}
+\affiliation{%
+  \institution{Universitat Politècnica de Catalunya}
+  \city{Barcelona}
+  \country{Spain}}
+\email{miguel.alcon@est.fib.upc.edu}
+
+\author{Roger Pujol Torramorell}
+\affiliation{%
+  \institution{Universitat Politècnica de Catalunya}
+  \city{Barcelona}
+  \country{Spain}}
+\email{roger.pujol@est.fib.upc.edu}
+
+\date{\today}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\info}[1]{{\color{orange} #1}}
+
+\begin{document}
+
+%\input{sections/abstract.tex}
+
+\maketitle
+
+\input{sections/1-introduction.tex}
+\input{sections/2-methodology.tex}
+\input{sections/3-results.tex}
+\input{sections/4-discussion.tex}
+\input{sections/5-related_work.tex}
+\input{sections/6-conclusions.tex}
+
+\bibliographystyle{acm}
+\bibliography{sections/cites}
+
+\end{document}

@@ -110,6 +110,9 @@ Network::Network(const int &n_, const int &k, const int &l) :
                 adjacency_matrix[u_id][v_id] += v_weight;
                 adjacency_matrix[v_id][u_id] += u_weight;
             }
+            // else {
+            //     cout << "Rejected: " << u_weight << " " << v_weight << endl;
+            // }
         }
 
         adjacency = CMatrix(n);

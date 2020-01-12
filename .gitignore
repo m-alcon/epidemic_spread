@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# LaTeX
+doc/*
+!doc/*.tex
+!doc/*.pdf
+!doc/sections
