@@ -31,7 +31,6 @@ size_t Network::size() const {
 Network::Network(const int &n_, const int &k, const int &l) :
     n(n_), generator(device()) {        
         Matrix stubs(n, Vector (k, 1));
-        cerr << "generate stubs" << endl;
         // Generate k stubs for each node and distribute weights
         uniform_int_distribution<int> k_distr (0, k-1);
         for (size_t i = 0; i < n; ++i) {
@@ -56,7 +55,6 @@ Network::Network(const int &n_, const int &k, const int &l) :
                 sum += stubs[i][j];
         }
 
-        cerr << "generate all_stubs" << endl;
         // Generate a vector with all the stubs
         Matrix all_stubs (n*k, Vector (2, 0));
         for (size_t i = 0; i < n; ++i) {
@@ -65,10 +63,8 @@ Network::Network(const int &n_, const int &k, const int &l) :
                 all_stubs[k*i + j][1] = j;
             }
         }
-        cerr << "shuffle" << endl;
         shuffle(all_stubs.begin(), all_stubs.end(), generator);
         
-        cerr << "check pairs" << endl;
         // Check that all stubs are not paired with other of the same node
         uniform_int_distribution<int> bool_distr (0, 1);
         uniform_int_distribution<int> nk_distr (0, (n*k)-1);
@@ -91,7 +87,6 @@ Network::Network(const int &n_, const int &k, const int &l) :
                 }
             }
         }
-        cerr << "create adjacency matrix" << endl;
 
         // Create adjacency matrix
         for (size_t i = 0; i < n*k; i += 2) {
@@ -110,15 +105,11 @@ Network::Network(const int &n_, const int &k, const int &l) :
                 adjacency_matrix[u_id][v_id] += v_weight;
                 adjacency_matrix[v_id][u_id] += u_weight;
             }
-            // else {
-            //     cout << "Rejected: " << u_weight << " " << v_weight << endl;
-            // }
         }
 
         adjacency = CMatrix(n);
         nodes = NVector(n, Node());
 
-        cerr << "move" << endl;
         // Move adjacency matrix to adjacency list
         for (size_t i = 0; i < n; ++i) {
             nodes[i].id = i;

@@ -2,6 +2,7 @@
 #include <fstream>
 
 void simulation_SIS (Network &net, const float &beta, const float &gamma, const int &initials, const int &tmax) {
+    ofstream out ("data/info_sis.dat");
     random_device device;
     mt19937 generator(device());
     uniform_real_distribution<float> distribution (0.0f,1.0f);
@@ -29,12 +30,13 @@ void simulation_SIS (Network &net, const float &beta, const float &gamma, const 
                 }
             }
         }
-        cout << t << " " << infecteds << endl;
+        out << t << " " << infecteds << endl;
         net.update_infecteds();
     }
 }
 
 void simulation_SIR (Network &net, const float &beta, const float &gamma, const int &initials, const int &tmax) {
+    ofstream out ("data/info_sir.dat");
     random_device device;
     mt19937 generator(device());
     uniform_real_distribution<float> distribution (0.0f,1.0f);
@@ -57,24 +59,38 @@ void simulation_SIR (Network &net, const float &beta, const float &gamma, const 
                 for (size_t j = 0; j < neighbors->size(); ++j){
                     if ((*neighbors)[j].node->infected)
                         infected_interactions += (*neighbors)[j].weight;
-                }
+                }               
                 if (distribution(generator) <= 1-pow(1-beta, infected_interactions)) {
+                    //cout << "prob: " << 1-pow(1-beta, infected_interactions) << " weights:" << infected_interactions << endl;
                     node->infect();
                     ++infecteds;
                 }
             }
         }
-        cout << t << " " << infecteds << " " << recovereds << endl;
+        out << t << " " << infecteds << " " << recovereds << endl;
         net.update_infecteds();
     }
 }
 
-int main() {
-    Network net (10000, 4, 8);
+int main(int argc, char* argv[]) {
+    int k, l;
+    if (argc != 3) {
+        k = 6;
+        l = 12;
+    }
+    else {
+        k = atoi(argv[1]);
+        l = atoi(argv[2]);
+    }
+    cout << "Parameters: k = " << k << " l = " << l << endl;
+    cout << "Generate network" << endl;
+    Network net (10000, k, l);
     ofstream sis ("data/net_sis.dat");
     ofstream sir ("data/net_sir.dat");
-    simulation_SIS(net, 0.01, 0.004, 20, 1000);
-    net.write(sis);
+    //cout << "SIS" << endl;
+    // simulation_SIS(net, 0.01, 0.004, 20, 1000);
+    // net.write(sis);
+    cout << "SIR" << endl;
     simulation_SIR(net, 0.01, 0.004, 20, 1000);
     net.write(sir);
 

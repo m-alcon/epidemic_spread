@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./bin/epidemic.exe
+./bin/epidemic.exe $1 $2
