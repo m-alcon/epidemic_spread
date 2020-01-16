@@ -1,5 +1,4 @@
 #include "network.h"
-#include <fstream>
 
 void simulation_SIS (Network &net, const float &beta, const float &gamma, const int &initials, const int &tmax) {
     ofstream out ("data/info_sis.dat");

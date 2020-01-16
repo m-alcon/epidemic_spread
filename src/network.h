@@ -2,6 +2,7 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <fstream>
 using namespace std;
 
 typedef vector<int> Vector;
@@ -33,6 +34,8 @@ class Network {
         mt19937 generator;
         NVector nodes;
         CMatrix adjacency;
+        Vector get_random_powerlaw();
+        Vector get_random_poisson(const int &k);
     public:
         Network (const int &n_, const int &k, const int &l);
         void write (ostream &out) const;
