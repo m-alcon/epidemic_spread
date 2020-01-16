@@ -1,8 +1,8 @@
 #include "network.h"
 #include <sstream>
 
-#define N_NETS 10
-#define REPETITIONS 10
+#define N_NETS 20
+#define REPETITIONS 100
 
 void simulation_SIS (Network &net, ofstream &out, const float &beta, const float &gamma, const int &initials, const int &tmax) {
     random_device device;
@@ -122,18 +122,18 @@ int main(int argc, char* argv[]) {
         info_l.distr = distr::Poisson;
         info_l.iparam = 8;
     }
-    cout << "Generate network" << endl;
     for (int i = 0; i < N_NETS; ++i) {
+        cout << "Generate network " << i << endl;
         Network net (10000, info_k, info_l);
         for (int j = 0; j < REPETITIONS; ++j) {
             ostringstream sir_ss, sis_ss;
-            sir_ss << "data/sir/" << info_k.distr << info_l.distr << "/n_" << i << "_" << j << ".dat"; 
-            sis_ss << "data/sis/" << info_k.distr << info_l.distr << "/n_" << i << "_" << j << ".dat"; 
+            sir_ss << "data/sir/" << info_k.distr << info_l.distr << "/" << i << "_" << j << ".dat"; 
+            sis_ss << "data/sis/" << info_k.distr << info_l.distr << "/" << i << "_" << j << ".dat"; 
             ofstream sir (sir_ss.str());
             ofstream sis (sis_ss.str());
-            cout << "SIS" << endl;
+            cout << "  Simulation " << j << " SIS for network " << i << endl;
             simulation_SIS(net, sis, 0.01, 0.004, 20, 1000);
-            cout << "SIR" << endl;
+            cout << "  Simulation " << j << " SIR for network " << i << endl;
             simulation_SIR(net, sir, 0.01, 0.004, 20, 1000);
         }
     }
