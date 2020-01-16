@@ -5,12 +5,15 @@ BIN = ../bin/
 SRC = $(wildcard *.cc)
 TAR = $(SRC:.cc=.o)
 
-.PHONY: all
+.PHONY: all powerlaw
 
 all: $(TAR) epidemic
 
 epidemic: $(OBJ)epidemic.o $(OBJ)network.o
 	$(CXX) -o $(BIN)epidemic.exe $^
+
+powerlaw: $(OBJ)powerlaw.o
+	$(CXX) -o $(BIN)powerlaw.exe $^
     
 %.o: %.cc
 	$(CXX) -c $^ -o $(OBJ)$@

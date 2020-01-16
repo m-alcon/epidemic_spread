@@ -3,6 +3,9 @@
         "iostream": "cpp",
         "random": "cpp",
         "ostream": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "fstream": "cpp",
+        "cmath": "cpp",
+        "*.tcc": "cpp"
     }
 }

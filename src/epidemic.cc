@@ -1,12 +1,16 @@
 #include "network.h"
+#include <sstream>
 
-void simulation_SIS (Network &net, const float &beta, const float &gamma, const int &initials, const int &tmax) {
-    ofstream out ("data/info_sis.dat");
+#define N_NETS 10
+#define REPETITIONS 10
+
+void simulation_SIS (Network &net, ofstream &out, const float &beta, const float &gamma, const int &initials, const int &tmax) {
     random_device device;
     mt19937 generator(device());
     uniform_real_distribution<float> distribution (0.0f,1.0f);
     net.initialize(initials);
     int infecteds = initials;
+    out << "t infected" << endl;
     for (int t = 0; t < tmax; ++t) {
         for (size_t i = 0; i < net.size(); ++i) {
             Node* node = net.get_node(i);
@@ -34,14 +38,14 @@ void simulation_SIS (Network &net, const float &beta, const float &gamma, const 
     }
 }
 
-void simulation_SIR (Network &net, const float &beta, const float &gamma, const int &initials, const int &tmax) {
-    ofstream out ("data/info_sir.dat");
+void simulation_SIR (Network &net, ofstream &out, const float &beta, const float &gamma, const int &initials, const int &tmax) {
     random_device device;
     mt19937 generator(device());
     uniform_real_distribution<float> distribution (0.0f,1.0f);
     net.initialize(initials);
     int infecteds = initials;
     int recovereds = 0;
+    out << "t infected recovered" << endl;
     for (int t = 0; t < tmax; ++t) {
         for (size_t i = 0; i < net.size(); ++i) {
             Node* node = net.get_node(i);
@@ -72,26 +76,68 @@ void simulation_SIR (Network &net, const float &beta, const float &gamma, const 
 }
 
 int main(int argc, char* argv[]) {
-    int k, l;
-    if (argc != 3) {
-        k = 6;
-        l = 12;
+    DistrInfo info_k, info_l;
+    if (argc > 1) {
+        cout << "Parameters: ";
+        info_k.distr = atoi(argv[1]);
+        int pos_l = 0;
+        switch (info_k.distr) {
+            case distr::Poisson:
+                info_k.iparam = atoi(argv[2]);
+                pos_l = 3;
+                cout << "<k> = " << info_k.iparam;
+                break;
+            case distr::PowerLaw:
+                info_k.fparam = atof(argv[2]);
+                info_k.iparam = atoi(argv[3]);
+                pos_l = 4;
+                cout << "lambda_k = " << info_k.fparam << " max_k = " << info_k.iparam << " ";
+                break;
+            default:
+                return -1;
+                break;
+        }
+        info_l.distr = atoi(argv[pos_l]);
+        switch (info_l.distr) {
+            case distr::Poisson:
+                info_l.iparam = atoi(argv[pos_l+1]);
+                cout << " <l> = " << info_l.iparam << endl;
+                break;
+            case distr::PowerLaw:
+                info_l.fparam = atof(argv[pos_l+1]);
+                info_l.iparam = atoi(argv[pos_l+2]);
+                cout << " lambda_l = " << info_l.fparam << " max_l = " << info_l.iparam << endl;
+                break;
+            case distr::Delta:
+                info_l.iparam = atof(argv[pos_l+1]);
+                cout << " delta_l = " << info_l.iparam << endl;
+                break;
+            default:
+                return -1;
+                break;
+        }
+    } else {
+        info_k.distr = distr::Poisson;
+        info_k.iparam = 4;
+        info_l.distr = distr::Poisson;
+        info_l.iparam = 8;
     }
-    else {
-        k = atoi(argv[1]);
-        l = atoi(argv[2]);
-    }
-    cout << "Parameters: k = " << k << " l = " << l << endl;
     cout << "Generate network" << endl;
-    Network net (10000, k, l);
-    ofstream sis ("data/net_sis.dat");
-    ofstream sir ("data/net_sir.dat");
-    //cout << "SIS" << endl;
-    // simulation_SIS(net, 0.01, 0.004, 20, 1000);
-    // net.write(sis);
-    cout << "SIR" << endl;
-    simulation_SIR(net, 0.01, 0.004, 20, 1000);
-    net.write(sir);
+    for (int i = 0; i < N_NETS; ++i) {
+        Network net (10000, info_k, info_l);
+        for (int j = 0; j < REPETITIONS; ++j) {
+            ostringstream sir_ss, sis_ss;
+            sir_ss << "data/sir/" << info_k.distr << info_l.distr << "/n_" << i << "_" << j << ".dat"; 
+            sis_ss << "data/sis/" << info_k.distr << info_l.distr << "/n_" << i << "_" << j << ".dat"; 
+            ofstream sir (sir_ss.str());
+            ofstream sis (sis_ss.str());
+            cout << "SIS" << endl;
+            simulation_SIS(net, sis, 0.01, 0.004, 20, 1000);
+            cout << "SIR" << endl;
+            simulation_SIR(net, sir, 0.01, 0.004, 20, 1000);
+        }
+    }
+    
 
     return 0;
 }
