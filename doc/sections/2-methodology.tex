@@ -101,3 +101,21 @@ To simulate this we do like in SIR but, at each time step, we go through all nod
 \end{itemize}
 \subsection{Experiments}
 \label{ssec:experiments}
+In our experiments, we test 6 different networks:
+\begin{itemize}
+    \item $P_k$ Poisson - $P_l$ Poisson
+    \item $P_k$ power law - $P_l$ Poisson
+    \item $P_k$ Poisson - $P_l$ power law 
+    \item $P_k$ power law - $P_l$ power law
+    \item $P_k$ Poisson - $P_l$ delta
+    \item $P_k$ power law - $P_l$ delta
+\end{itemize}
+The parameters are:
+\begin{itemize}
+    \item $P_k$ Poisson: $<k> = 4$
+    \item $P_l$ Poisson: $<l> = 8$
+    \item $P_k$ power law: $\lambda_k=1.4$, $x_0=1$ and $x_1=22$
+    \item $P_l$ power law: $\lambda_l=0.89$, $x_0=k$ and $x_1=22$
+    \item $P_l$ delta: $\delta = 2$
+\end{itemize}
+We generated 20 networks for each of the mentioned configurations and in them we simulated 100 times each simulation model (SIR and SIS). We used the same parameters in both models, $\beta = 0.01$ and $\gamma = 0.004$.
