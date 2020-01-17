@@ -127,14 +127,7 @@ Network::Network(const int &n_, const DistrInfo &info_k, const DistrInfo &info_l
             for (sum; sum < l; ++sum)
                 ++stubs[i][k_distr(generator)];
         }
-        for (size_t i = 0; i < n; ++i) {
-            int sum = 0;
-            for (size_t j = 0; j < stubs[i].size(); ++j) 
-                sum += stubs[i][j];
-        }
-        // cout << "<k> " << sum_k/float(n) << endl;
-        // cout << "<l> " << sum_l/float(n) << endl; 
-
+        
         // Generate a vector with all the stubs
         Matrix all_stubs (sum_k, Vector (2, 0));
         int pos = 0;

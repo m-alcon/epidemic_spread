@@ -1,5 +1,25 @@
 \section{Methodology}
 \subsection{Network Generation}
+Networks are obtained by first generating 10000 nodes with $k_i$ stubs ($0 \leq i < n$). Each $k_i$ is selected randomly using a Poisson or a power law distribution. The $l_i$ interaction events a node has are then distributed among its $k_i$ stubs. Again, each $l_i$ is randomly picked using a Poisson or power law distributions, or they are just $\delta \cdot k_i$. We refer to this as the delta distribution, though it is just a multiplication of $k_i$. Moreover, the interactions of a node are distributed among the stubs in the following way:
+\begin{enumerate}
+    \item Generate one real number $r_j$ between 0 and 1 for each stub ($0 \leq j < k_i$).
+    \item Calculate the total sum. $$total = \sum_{j=0}^{k_i}r_j$$
+    \item Each stub is then equal to $$\lfloor \frac{(l_i-k_i)\cdot r_j}{total}\rfloor$$
+    With this, all (or almost all) the interactions are distributed.
+    \item Distribute randomly the remaining interactions, if any.
+\end{enumerate}
+This process assigns a weight to each stub of a node according to its $l_i$.
+
+After this, the adjacency matrix of the network is generated following this process:
+\begin{enumerate}
+    \item \textbf{Match}. Stubs are randomly matched together. To do this, we put all the stubs in a vector and we shuffle it. Then, each stub in a even position within the resultant vector is matched to the stub at its right, if there is one. If the stubs in a match are from the same node, we randomly select another stub of the vector and we try to swap it with one of the others. We repeat this process until all matched stubs are from different nodes.
+    \item \textbf{Reject}. A match can be rejected if the weights of the stubs differ by more than one interaction event. In addition, matches are rejected if they differ by more than 10\% of the smaller weight involved to avoid biases in nodes with few links. If stubs with non-identical weighs are matched, i.e. they differ by 1, we assign randomly one of them to the weight of the connection.
+    \item \textbf{Connect} For all accepted match, we sum its weight to the corresponding position of the adjacency matrix. We sum instead of assign the weight to the matrix in order to avoid checking that there not exist any match between the same nodes.
+\end{enumerate}
+Since this way of matching the nodes can lead to a lot of rejections, this process is repeated until it does not match any stub more in two consecutive iterations. Finally, we generate the adjacency list from the matrix to reduce the memory size, and because we can iterate through it faster.
+
+Regarding the distributions, except the power law, all the distributions and random number generators used in this work are the ones implemented in the well-known \textit{random} standard library of C++. If distribution is not specified, random numbers follow a uniform distribution.
+
 \subsection{Infection Simulation}
 To simulate the epidemic infection spread through the generated networks, we tested two different models: SIR and SIS.
 \subsubsection{SIR}
