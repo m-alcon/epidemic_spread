@@ -37,7 +37,7 @@ for (epidemic in c('sir','sis')) {
     names = distr.to.str(distr.path)
     title=paste(bquote(P[k]),names[1],'\n', expression(P[l]), names[2], sep=' ')
     title=bquote(P[k] ~ .(paste(names[1],' &',sep='')) ~ P[l] ~ .(names[2]))
-    pdf(paste('img/',epidemic,'_',distr.path,'.pdf',sep=''))
+    pdf(paste('img/',epidemic,'_',distr.path,'.pdf',sep=''), width=3*3, height=2.5*3)
     plot(mean$t, mean$infected, ylim=c(0,10000), type='l', lwd=2, xlab='', ylab='')
     title(title, line=-2)
     lines(max$infected, col='red', lty=2, lwd=2)
