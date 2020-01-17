@@ -34,7 +34,6 @@
 # LaTeX
 doc/*
 !doc/*.tex
-!doc/*.pdf
 !doc/sections
 
 data/sir
