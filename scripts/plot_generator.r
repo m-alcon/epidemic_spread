@@ -47,4 +47,12 @@ for (epidemic in c('sir','sis')) {
   }
 }
 
+pl = hist(scan('data/power_law.dat', sep=' '), plot=FALSE, breaks=50)
+pdf('img/power_law.pdf', width=3*3, height=2.5*3)
+hist(scan('data/power_law.dat', sep=' '), breaks=50, xlab='Bins',  main='')
+dev.off()
+pdf('img/power_law_log.pdf', width=3*3, height=2.5*3)
+plot(pl$breaks[1:49], pl$counts, type='l', lwd=2, xlab='Bins', ylab='Frequency', log="xy")
+dev.off()
+
 

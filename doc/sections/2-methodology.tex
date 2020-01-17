@@ -1,4 +1,30 @@
 \section{Methodology}
+\subsection{Probability distributions}
+As explained before, the main goal of this project is simulating the SIR and SIS epidemic models into networks. Random numbers and, so, probability distributions are the basis of the project. We use 3 different distributions among all the paper: Poisson, power law and uniform. Except the second one, all the distributions used in this work are the ones implemented in the well-known \textit{random} standard library of C++. If the distribution is not specified somewhere in the paper, random numbers follow a uniform distribution then.
+
+For the power law, we created ourselves the number generator that follows the distribution. Given a real random number $y$ between 0 and 1, the number generator returns the following: $$[(x_1^{1-\lambda}-(x_1^{1-\lambda}-x_0^{1-\lambda}))\cdot y]^\frac{1}{1-\lambda}$$
+Where $x_0$ and $x_1$ are the maximum and minimum possible numbers, respectively, and $\lambda$ the exponent.
+
+We tested the generator generating 10000 numbers with it and checking whether them follow a power law or not. You can see the results in figure~\ref{fig:powerlaw}. 
+
+\begin{figure*}[hbtp]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+          \includegraphics[width=\textwidth]{../img/power_law.pdf}
+          \caption{Normal scale}
+    \end{subfigure}
+    \hspace{0.08\textwidth}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+          \includegraphics[width=\textwidth]{../img/power_law_log.pdf}
+          \caption{Log scale (line histogram)}
+    \end{subfigure}
+    \caption{Generated numbers with our power law number generator. We divided all the possible values into 50 bins.}
+    \label{fig:powerlaw}
+\end{figure*}
+
+
 \subsection{Network Generation}
 Networks are obtained by first generating 10000 nodes with $k_i$ stubs ($0 \leq i < n$). Each $k_i$ is selected randomly using a Poisson or a power law distribution. The $l_i$ interaction events a node has are then distributed among its $k_i$ stubs. Again, each $l_i$ is randomly picked using a Poisson or power law distributions, or they are just $\delta \cdot k_i$. We refer to this as the delta distribution, though it is just a multiplication of $k_i$. Moreover, the interactions of a node are distributed among the stubs in the following way:
 \begin{enumerate}
@@ -17,8 +43,6 @@ After this, the adjacency matrix of the network is generated following this proc
     \item \textbf{Connect} For all accepted match, we sum its weight to the corresponding position of the adjacency matrix. We sum instead of assign the weight to the matrix in order to avoid checking that there not exist any match between the same nodes.
 \end{enumerate}
 Since this way of matching the nodes can lead to a lot of rejections, this process is repeated until it does not match any stub more in two consecutive iterations. Finally, we generate the adjacency list from the matrix to reduce the memory size, and because we can iterate through it faster.
-
-Regarding the distributions, except the power law, all the distributions and random number generators used in this work are the ones implemented in the well-known \textit{random} standard library of C++. If distribution is not specified, random numbers follow a uniform distribution.
 
 \subsection{Infection Simulation}
 To simulate the epidemic infection spread through the generated networks, we tested two different models: SIR and SIS.
